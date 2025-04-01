@@ -1,0 +1,4 @@
+*.db
+mysql-bin.*
+env
+__pycache__
