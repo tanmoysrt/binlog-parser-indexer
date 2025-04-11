@@ -11,6 +11,7 @@ binlog_database = SqliteDatabase(
     timeout=15,
     pragmas={
         "journal_mode": "wal",
+        "auto_vacuum": "full",
         "synchronous": "normal",
         "mmap_size": 1048576,  # 1MB
         "page_size": 4096,  # 4KB
@@ -55,6 +56,3 @@ class BinlogModel(Model):
 
     class Meta:
         database = binlog_database
-
-
-# binlog_database.create_tables([QueryModel, BinlogModel])

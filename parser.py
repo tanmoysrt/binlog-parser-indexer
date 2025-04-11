@@ -150,9 +150,9 @@ class Query:
         self.query = query
         self.is_truncated = False
         # if query is more than 500 characters, truncate it
-        if len(self.query) > 500:
-            self.query = self.query[:200] + "..." + self.query[-300:]
-            self.is_truncated = True
+        # if len(self.query) > 500:
+        #     self.query = self.query[:200] + "..." + self.query[-300:]
+        #     self.is_truncated = True
         self.query_start = query_start
         self.query_end = query_end
         self.event_start = event_start
@@ -252,8 +252,7 @@ class BinlogParser:
             if event.query_type != "TCL":
                 # No need to log TCL queries
                 result = Query(
-                    database=event.db,
-                    table=event.table,
+                    sources=[(event.db, event.table)],
                     timestamp=header.timestamp,
                     type=event.query_type,
                     event_start=header.position,

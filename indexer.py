@@ -12,8 +12,6 @@ class BinlogIndexer:
 
     def add(self, binlog_name: str):
         path = os.path.join(self.base_path, binlog_name)
-        if BinlogModel.get_or_none(BinlogModel.name == binlog_name):
-            return
 
         # check if file exists
         if not os.path.exists(path):
@@ -26,45 +24,7 @@ class BinlogIndexer:
             parser = BinlogParser(data)
             queries = list(parser.parse_queries())
 
-            rows = []
-            for q in queries:
-                for source in q.sources:
-                    rows.append(
-                        [
-                            q.timestamp,
-                            source[0],
-                            source[1],
-                            q.type,
-                            q.query,
-                            q.is_truncated,
-                            q.query_start,
-                            q.query_end,
-                            q.event_start,
-                            q.event_length,
-                            q.related_events_end_pos,
-                            binlog_name,
-                        ]
-                    )
-
-            QueryModel.insert_many(
-                rows,
-                fields=[
-                    QueryModel.timestamp,
-                    QueryModel.database,
-                    QueryModel.table,
-                    QueryModel.type,
-                    QueryModel.query,
-                    QueryModel.is_query_truncated,
-                    QueryModel.query_start,
-                    QueryModel.query_end,
-                    QueryModel.event_start,
-                    QueryModel.event_length,
-                    QueryModel.related_events_end_pos,
-                    QueryModel.binlog_name,
-                ],
-            ).execute()
-
-            BinlogModel.create(name=binlog_name)
+            print(f"Parsed {len(queries)} queries")
         except Exception:
             with contextlib.suppress(Exception):
                 file.close()

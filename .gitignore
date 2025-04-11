@@ -2,3 +2,4 @@
 mysql-bin.*
 env
 __pycache__
+.vscode
